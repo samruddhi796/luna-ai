@@ -1,0 +1,6 @@
+streamlit
+google-adk
+aiosqlite
+nest_asyncio
+python-dotenv
+beautifulsoup4

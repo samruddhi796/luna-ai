@@ -1,0 +1,23 @@
+# Sensitive files
+.env
+
+# Databases
+memory/data/
+*.db
+*.sqlite
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Local Streamlit Secrets
+.streamlit/secrets.toml
+
+# Virtual Environment
+venv/
+.venv/
+env/
