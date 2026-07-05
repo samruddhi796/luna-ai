@@ -10,6 +10,18 @@ from agents.orchestrator import orchestrate
 dotenv.load_dotenv()
 api_key = os.environ.get("GEMINI_API_KEY", "")
 
+# Helper to render styled agent badges
+def get_agent_badge_html(agent_name: str) -> str:
+    agent_class_map = {
+        "Quiz Agent": "badge-quiz",
+        "Concept Explainer": "badge-concept",
+        "Career Guide": "badge-career",
+        "Study Planner": "badge-study",
+        "Luna": "badge-luna"
+    }
+    cls = agent_class_map.get(agent_name, "badge-luna")
+    return f'<div class="agent-badge {cls}">🤖 {agent_name}</div>'
+
 # ── Page config ────────────────────────────────────────────────
 st.set_page_config(
     page_title="Luna AI",
@@ -24,6 +36,22 @@ st.markdown("""
 
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
+/* App background and text */
+[data-testid="stAppViewContainer"] {
+    background-color: #0d0a1a !important;
+    color: #e8e0ff !important;
+}
+
+/* Sidebar styling */
+[data-testid="stSidebar"] {
+    background-color: #120d24 !important;
+    border-right: 1px solid #2d2052 !important;
+}
+section[data-testid="stSidebar"] > div {
+    background-color: #120d24 !important;
+}
+
+/* Header */
 .luna-header {
     text-align: center;
     padding: 2rem 0 1rem;
@@ -31,41 +59,98 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .luna-header h1 {
     font-size: 2.4rem;
     font-weight: 600;
-    color: #1a1a2e;
+    color: #e8e0ff !important;
     margin: 0;
     letter-spacing: -0.5px;
 }
 .luna-header p {
-    color: #6b7280;
+    color: #7c6faa !important;
     margin-top: 0.4rem;
     font-size: 1rem;
 }
-.moon { font-size: 2rem; }
+.moon {
+    font-size: 2rem;
+    filter: drop-shadow(0 0 12px #a78bfa88);
+}
 
+/* Memory Card */
 .memory-card {
-    background: #f0f4ff;
-    border-left: 3px solid #6366f1;
+    background-color: #16112b !important;
+    border: 1px solid #2d2052 !important;
+    border-left: 3px solid #7c3aed !important;
+    color: #e8e0ff !important;
     border-radius: 8px;
     padding: 0.75rem 1rem;
     margin-bottom: 1rem;
     font-size: 0.85rem;
-    color: #374151;
 }
-.memory-card b { color: #4f46e5; }
+.memory-card b {
+    color: #a78bfa !important;
+}
 
+/* Base agent badge */
 .agent-badge {
     display: inline-block;
-    background: #ede9fe;
-    color: #6d28d9;
     border-radius: 20px;
     padding: 2px 10px;
     font-size: 0.75rem;
     font-weight: 500;
     margin-bottom: 6px;
+    border: 1px solid #2d2052;
 }
 
+/* Badges by type */
+.badge-quiz {
+    background-color: #1a0d2e !important;
+    color: #c084fc !important;
+}
+.badge-concept {
+    background-color: #0d1f3c !important;
+    color: #60a5fa !important;
+}
+.badge-career {
+    background-color: #0d2018 !important;
+    color: #4ade80 !important;
+}
+.badge-study {
+    background-color: #1f1508 !important;
+    color: #fb923c !important;
+}
+.badge-luna {
+    background-color: #16112b !important;
+    color: #a78bfa !important;
+}
+
+/* Chat bubble overrides */
 [data-testid="stChatMessage"] {
+    background-color: #16112b !important;
+    border: 1px solid #2d2052 !important;
     border-radius: 12px;
+    color: #e8e0ff !important;
+}
+
+/* Text Input & Text Area */
+div[data-testid="stTextInput"] input, div[data-testid="stTextArea"] textarea {
+    background-color: #16112b !important;
+    color: #e8e0ff !important;
+    border: 1px solid #2d2052 !important;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"] {
+    border-bottom: 1px solid #2d2052 !important;
+}
+.stTabs [data-baseweb="tab"] {
+    color: #7c6faa !important;
+}
+.stTabs [aria-selected="true"] {
+    color: #a78bfa !important;
+    border-bottom-color: #7c3aed !important;
+}
+
+/* Progress bar override */
+.stProgress > div > div > div > div {
+    background: linear-gradient(to right, #7c3aed, #a855f7) !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -207,7 +292,7 @@ with tab_chat:
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             if msg.get("agent"):
-                st.markdown(f'<div class="agent-badge">🤖 {msg["agent"]}</div>', unsafe_allow_html=True)
+                st.markdown(get_agent_badge_html(msg["agent"]), unsafe_allow_html=True)
             st.markdown(msg["content"])
 
     # Chat input
@@ -227,7 +312,7 @@ with tab_chat:
                     state_delta=None
                 )
             if agent_used:
-                st.markdown(f'<div class="agent-badge">🤖 {agent_used}</div>', unsafe_allow_html=True)
+                st.markdown(get_agent_badge_html(agent_used), unsafe_allow_html=True)
             st.markdown(response)
 
         st.session_state.messages.append({
