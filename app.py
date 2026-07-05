@@ -164,17 +164,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ── API Key input ───────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### ⚙️ Setup")
-    api_key_input = st.text_input("Gemini API Key", type="password",
-                                  value=api_key,
-                                  help="Get your free key at aistudio.google.com")
-    if api_key_input:
-        api_key = api_key_input
-        os.environ["GEMINI_API_KEY"] = api_key_input
-        
-    st.markdown("---")
     st.markdown("### 🧠 What Luna can do")
     st.markdown("""
 - 📚 Explain any concept simply
@@ -237,7 +227,7 @@ if "student_id" not in st.session_state:
 
 # ── Chat interface ──────────────────────────────────────────────
 if not api_key:
-    st.info("👈 Enter your Gemini API key in the sidebar to start chatting with Luna!")
+    st.error("🔑 **Gemini API Key missing!** Please set the `GEMINI_API_KEY` environment variable or define it in your `.env` file to start learning.")
     st.stop()
 
 if "messages" not in st.session_state:
