@@ -9,15 +9,6 @@ def main():
     dotenv.load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
     os.environ["GEMINI_API_KEY"] = api_key
-    
-    # Force tool calling
-    orchestrator_agent.generate_content_config = types.GenerateContentConfig(
-        tool_config=types.ToolConfig(
-            function_calling_config=types.FunctionCallingConfig(
-                mode=types.FunctionCallingConfigMode.ANY
-            )
-        )
-    )
     if not api_key:
         if len(sys.argv) > 1:
             api_key = sys.argv[1]

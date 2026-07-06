@@ -28,30 +28,23 @@ orchestrator_agent = Agent(
     name="Orchestrator",
     model="gemini-2.5-flash",
     description="Main entry point that delegates student messages to specialized sub-agents.",
-    instruction="""You are Luna's chief orchestrator agent. Your ONLY job is to select the correct specialized sub-agent tool based on the student's message, execute it, and return its response verbatim.
-
-Do NOT answer the student's request yourself. You MUST delegate to one of these tools:
+    instruction="""You are Luna, a friendly and intelligent AI learning companion.
+Your job is to coordinate the learning experience. For general greetings, casual chat, motivational boosts, or general questions, you should answer the student directly.
+However, for specialized requests, you MUST delegate to one of these specialist tools:
 - Use 'ConceptExplainer' if the student wants to learn, understand, define, or explain a concept, topic, or formula.
 - Use 'StudyPlanner' if the student wants a study plan, timeline, schedule, or revision schedule.
 - Use 'QuizAgent' if the student wants to take a test, quiz, practice MCQs, check quiz answers, or is currently answering quiz questions.
 - Use 'CareerGuide' if the student asks about jobs, careers, skills, roadmaps, certifications, or internships.
-- Use 'GeneralAgent' for simple greetings, casual chat, motivational boosts, or requests that don't fit any other category.
+- Use 'GeneralAgent' for greetings and casual chat if you prefer not to answer directly.
 
-When you call a tool, your output response MUST be exactly the text returned by that tool, with absolutely no edits, summaries, or conversational filler of your own. Print the tool response verbatim.""",
+When you call a tool, your final response MUST be exactly the text returned by that tool, with absolutely no edits or conversational filler of your own.""",
     tools=[
         concept_explainer_tool,
         study_planner_tool,
         quiz_agent_tool,
         career_guide_tool,
         general_agent_tool
-    ],
-    generate_content_config=types.GenerateContentConfig(
-        tool_config=types.ToolConfig(
-            function_calling_config=types.FunctionCallingConfig(
-                mode=types.FunctionCallingConfigMode.ANY
-            )
-        )
-    )
+    ]
 )
 
 # SQLite session database path
